@@ -1,5 +1,5 @@
 Object subclass: #Unifier
-	instanceVariableNames: 'decorators'
+	instanceVariableNames: 'termRelation'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'AlgebraicDataType'!
@@ -13,26 +13,27 @@ sigma holds our unifications in triangular form.
 vars is a Dictionary mapping the representative of each equivalence class to the variables in that class.!
 
 
-!Unifier methodsFor: 'evaluating' stamp: 'fbs 5/28/2011 13:41'!
+!Unifier methodsFor: 'evaluating' stamp: 'fbs 5/28/2011 19:53'!
 unify: s with: t
-	"^ self recursivelyUnify: s with: t."
-	self unifClosure: (self decoratorFor: s) and: (self decoratorFor: t).
-	^ self findSolution: (self decoratorFor: s) withUnifier: Dictionary new.! !
+	termRelation := TermRelation new.
+	(termRelation classFor: s) unificationClosureWith: (termRelation classFor: t) in: termRelation.
+	^ (termRelation classFor: s) findSolutionWithUnifier: Dictionary new in: termRelation.! !
 
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 11:26'!
-decoratorFor: anObject
-	^ decorators
-		at: anObject
-		ifAbsentPut: [UnificationEquivalenceClass decorate: anObject].! !
+!Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 19:51'!
+findSolution: anEquivClass withUnifier: aDictionary
+	^ anEquivClass findSolutionWithUnifier: aDictionary in: termRelation.! !
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 13:48'!
-findSolution: aDecorator withUnifier: aDictionary
-	| newUnifier s |
-	s := aDecorator findRepresentative schemaTerm.
-	s acyclic ifTrue: [^aDictionary "s is not part of a cycle."].
-	
-	s visited ifTrue: [UnificationFailure signal. "Cycle detected."].
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+Unifier class
+	instanceVariableNames: ''!
+
+!Unifier class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 07:12'!
+unify: left with: right
+	^ self new unify: left with: right.! !
+ "Cycle detected."].
 
 	newUnifier := aDictionary copy.	
 	(s node isAlgebraic and: [s node hasChildren]) ifTrue:
