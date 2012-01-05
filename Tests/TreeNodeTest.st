@@ -51,10 +51,6 @@ testNodeHasChildren
 	
 	self assert: (TreeNode left: (Leaf value: 1) right: (Leaf value: 2)) children = {Leaf value: 1. Leaf value: 2}.! !
 
-!TreeNodeTest methodsFor: 'testing' stamp: 'fbs 8/3/2011 07:48'!
-testNodeIsNotVariable
-	self deny: (TreeNode left: Tree empty right: Tree empty) isMetaVariable.! !
-
 
 !TreeNodeTest methodsFor: 'testing - unapply' stamp: 'fbs 8/3/2011 07:49'!
 testUnapplyFullyShouldDestructureEagerly
@@ -72,6 +68,10 @@ testUnapplyShouldDestructureLazily
 	| destructure tree |
 	tree := TreeNode left: (Leaf value: 1) right: (Leaf value: 2).
 	destructure := tree unapply.
+	self assert: destructure first = #TreeNode.
+	self assert: destructure second = tree left.
+	self assert: destructure third = tree right.! !
+ructure := tree unapply.
 	self assert: destructure first = #TreeNode.
 	self assert: destructure second = tree left.
 	self assert: destructure third = tree right.! !

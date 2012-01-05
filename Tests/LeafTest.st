@@ -47,14 +47,15 @@ testLeafHasChildren
 	
 	self assert: (Leaf value: 1) children = #(1).! !
 
-!LeafTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 22:32'!
-testLeafIsNotVariable
-	self deny: (Leaf value: 1) isMetaVariable.! !
-
 !LeafTest methodsFor: 'testing' stamp: 'fbs 5/22/2011 21:15'!
 testUnapplyShouldDestructure
 	| destructure tree |
 	tree := Leaf value: 1.
+	destructure := tree unapply.
+	self assert: destructure first = #Leaf.
+	self assert: destructure second = tree value.! !
+
+value: 1.
 	destructure := tree unapply.
 	self assert: destructure first = #Leaf.
 	self assert: destructure second = tree value.! !
