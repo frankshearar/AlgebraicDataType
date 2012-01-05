@@ -112,8 +112,12 @@ assertCorrectTag: aCollection
 	(aCollection first = expected)
 		ifFalse: [ApplyError signal: ('Unexpected tag: was {1}, expected {2}' format: {aCollection first. expected})].! !
 
-
-subclass: className
+!AlgebraicDataType class methodsFor: 'instance creation' stamp: 'fbs 7/9/2011 17:20'!
+define: className in: category
+	"Define the root class of an algebraic data type.
+	- Return the new class."
+	^ AlgebraicDataType
+		subclass: className
 		instanceVariableNames: ''
 		classVariableNames: ''
 		poolDictionaries: ''
@@ -167,20 +171,6 @@ define: className withConstructor: selector
 		withConstructor: selector.! !
 
 
-!AlgebraicDataType class methodsFor: 'testing' stamp: 'fbs 7/22/2011 17:47'!
-assertCorrectSize: aCollection
-	| expected |
-	expected := self new unapply size.
-	(aCollection size = expected)
-		ifFalse: [ApplyError signal: ('Incorrect number of arguments: was {1}, expected {2}' format: {aCollection size. expected})].! !
-
-!AlgebraicDataType class methodsFor: 'testing' stamp: 'fbs 7/22/2011 17:46'!
-assertCorrectTag: aCollection
-	| expected |
-	expected := self new unapply first.
-	(aCollection first = expected)
-		ifFalse: [ApplyError signal: ('Unexpected tag: was {1}, expected {2}' format: {aCollection first. expected})].! !
-
 
 !AlgebraicDataType class methodsFor: 'private' stamp: 'fbs 7/9/2011 16:55'!
 accessorFor: selector
@@ -199,6 +189,16 @@ constructorFor: selector
 
 !AlgebraicDataType class methodsFor: 'private' stamp: 'fbs 7/9/2011 16:03'!
 initialiserFor: selector
+	| tokens names |
+	selector numArgs = 0 ifTrue: [Error signal: 'Selector must have arity > 0'].
+	
+	tokens := selector allButLast splitBy: #:.
+	names := tokens collect: [:each | each -> ('a', each capitalized)].
+
+	^ ({(names collect: [:each | each key asString, ': ', each value]) join: ' '} ,
+		(names collect: [:each | ('	{1} := {2}.' format: {each key. each value.})]))
+			join: Character cr.! !
+or: selector
 	| tokens names |
 	selector numArgs = 0 ifTrue: [Error signal: 'Selector must have arity > 0'].
 	
