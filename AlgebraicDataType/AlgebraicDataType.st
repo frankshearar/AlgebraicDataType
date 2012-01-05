@@ -98,20 +98,6 @@ apply: aCollection
 	"The inverse operation to #unapply: given a tagged collection, create an object."
 	self subclassResponsibility.! !
 
-!AlgebraicDataType class methodsFor: 'instance creation' stamp: 'fbs 7/22/2011 17:47'!
-assertCorrectSize: aCollection
-	| expected |
-	expected := self new unapply size.
-	(aCollection size = expected)
-		ifFalse: [ApplyError signal: ('Incorrect number of arguments: was {1}, expected {2}' format: {aCollection size. expected})].! !
-
-!AlgebraicDataType class methodsFor: 'instance creation' stamp: 'fbs 7/22/2011 17:46'!
-assertCorrectTag: aCollection
-	| expected |
-	expected := self new unapply first.
-	(aCollection first = expected)
-		ifFalse: [ApplyError signal: ('Unexpected tag: was {1}, expected {2}' format: {aCollection first. expected})].! !
-
 !AlgebraicDataType class methodsFor: 'instance creation' stamp: 'fbs 7/9/2011 17:20'!
 define: className in: category
 	"Define the root class of an algebraic data type.
@@ -171,6 +157,20 @@ define: className withConstructor: selector
 		withConstructor: selector.! !
 
 
+!AlgebraicDataType class methodsFor: 'testing' stamp: 'fbs 7/22/2011 17:47'!
+assertCorrectSize: aCollection
+	| expected |
+	expected := self new unapply size.
+	(aCollection size = expected)
+		ifFalse: [ApplyError signal: ('Incorrect number of arguments: was {1}, expected {2}' format: {aCollection size. expected})].! !
+
+!AlgebraicDataType class methodsFor: 'testing' stamp: 'fbs 7/22/2011 17:46'!
+assertCorrectTag: aCollection
+	| expected |
+	expected := self new unapply first.
+	(aCollection first = expected)
+		ifFalse: [ApplyError signal: ('Unexpected tag: was {1}, expected {2}' format: {aCollection first. expected})].! !
+
 
 !AlgebraicDataType class methodsFor: 'private' stamp: 'fbs 7/9/2011 16:55'!
 accessorFor: selector
@@ -198,6 +198,7 @@ initialiserFor: selector
 	^ ({(names collect: [:each | each key asString, ': ', each value]) join: ' '} ,
 		(names collect: [:each | ('	{1} := {2}.' format: {each key. each value.})]))
 			join: Character cr.! !
+n: Character cr.! !
 or: selector
 	| tokens names |
 	selector numArgs = 0 ifTrue: [Error signal: 'Selector must have arity > 0'].
