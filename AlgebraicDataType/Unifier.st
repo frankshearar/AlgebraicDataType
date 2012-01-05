@@ -1,5 +1,5 @@
 Object subclass: #Unifier
-	instanceVariableNames: 'decorators schemaFunction sigma visited acyclic classes vars'
+	instanceVariableNames: 'decorators'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'AlgebraicDataType'!
@@ -13,14 +13,11 @@ sigma holds our unifications in triangular form.
 vars is a Dictionary mapping the representative of each equivalence class to the variables in that class.!
 
 
-!Unifier methodsFor: 'evaluating' stamp: 'fbs 5/27/2011 13:29'!
+!Unifier methodsFor: 'evaluating' stamp: 'fbs 5/28/2011 13:41'!
 unify: s with: t
 	"^ self recursivelyUnify: s with: t."
 	self unifClosure: (self decoratorFor: s) and: (self decoratorFor: t).
-	self findSolution: (self decoratorFor: s).
-	"(s hasVariable or: [t hasVariable]) not
-		ifTrue: [UnificationFailure signal]."
-	^ Dictionary newFrom: sigma.! !
+	^ self findSolution: (self decoratorFor: s) withUnifier: Dictionary new.! !
 
 
 !Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 11:26'!
@@ -29,25 +26,28 @@ decoratorFor: anObject
 		at: anObject
 		ifAbsentPut: [UnificationEquivalenceClass decorate: anObject].! !
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/26/2011 19:10'!
-findSolution: aDecorator
-	| s |
+!Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 13:48'!
+findSolution: aDecorator withUnifier: aDictionary
+	| newUnifier s |
 	s := aDecorator findRepresentative schemaTerm.
-	s acyclic ifTrue: [^self "s is not part of a cycle."].
+	s acyclic ifTrue: [^aDictionary "s is not part of a cycle."].
 	
 	s visited ifTrue: [UnificationFailure signal. "Cycle detected."].
-	
+
+	newUnifier := aDictionary copy.	
 	(s node isAlgebraic and: [s node hasChildren]) ifTrue:
 		[s visited: true.
 		s node children do:
-			[:each | self findSolution: (self decoratorFor: each)].
+			[:each | newUnifier addAll: (self findSolution: (self decoratorFor: each) withUnifier: newUnifier)].
 		s visited: false].
 	
 	s acyclic: true.
 	s findRepresentative vars do:
-		[:x | (x ~= s node) ifTrue: [sigma addFirst: (x -> s node)]].! !
+		[:x | (x ~= s node) ifTrue: [newUnifier at: x put: s node]].
+	
+	^ newUnifier.! !
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 11:21'!
+!Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 12:23'!
 unifClosure: leftDecorator and: rightDecorator
 	| left right s sTerm t tTerm |
 	s := leftDecorator findRepresentative.
@@ -67,8 +67,8 @@ unifClosure: leftDecorator and: rightDecorator
 		ifTrue:
 			["s = f(s1, ..., sn), t = g(t1, ..., tn) where m, n > 0"
 			(left type = right type) ifFalse: [UnificationFailure signal. "f ~= g"].
-			sTerm union: tTerm.
 			(left arity = right arity) ifFalse: [UnificationFailure signal].
+			sTerm union: tTerm.
 			left children with: right children do:
 				[:si :ti | self unifClosure: (self decoratorFor: si) and: (self decoratorFor: ti)]]
 		ifFalse:
@@ -78,11 +78,10 @@ unifClosure: leftDecorator and: rightDecorator
 				ifFalse: ["s ~= t" UnificationFailure signal]].! !
 
 
-!Unifier methodsFor: 'initialize-release' stamp: 'fbs 5/25/2011 21:15'!
+!Unifier methodsFor: 'initialize-release' stamp: 'fbs 5/28/2011 13:49'!
 initialize
 	super initialize.
-	decorators := Dictionary new.
-	sigma := OrderedCollection new.! !
+	decorators := Dictionary new.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -92,6 +91,7 @@ Unifier class
 !Unifier class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 07:12'!
 unify: left with: right
 	^ self new unify: left with: right.! !
+unify: left with: right.! !
 '!
 
 !Unifier class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 07:12'!
