@@ -90,16 +90,18 @@ findRepresentative
 	self classPointer: result.
 	^ result.! !
 
-!UnificationDecoration methodsFor: 'unification' stamp: 'fbs 5/25/2011 22:32'!
+!UnificationDecoration methodsFor: 'unification' stamp: 'fbs 5/26/2011 22:30'!
 union: aDecorator
 	"Given myself, a representative, and aDecorator, another representative, merge the two equivalence classes by folding the smaller into the larger."
-	self classSize < aDecorator classSize ifTrue: [^ aDecorator union: self].
+	| s t |
+	(self classSize >= aDecorator classSize)
+		ifTrue: [s := self. t := aDecorator]
+		ifFalse: [t := self. s := aDecorator].
 	
-	self classSize: self classSize + aDecorator classSize.
-	self vars: self vars, aDecorator vars.
-	self schemaTerm node isMetaVariable ifTrue: [
-		self schemaTerm: aDecorator schemaTerm.
-		aDecorator classPointer: self].! !
+	s classSize: s classSize + t classSize.
+	s vars: s vars, t vars.
+	s schemaTerm node isMetaVariable ifTrue: [s schemaTerm: t schemaTerm].
+	t classPointer: s.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -109,3 +111,4 @@ UnificationDecoration class
 !UnificationDecoration class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 21:16'!
 decorate: anObject
 	^ self new decorate: anObject.! !
+.! !

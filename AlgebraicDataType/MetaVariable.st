@@ -28,6 +28,10 @@ hasChildren
 	"Even though unapplied a variable looks like it has a parameter, that's just its name."
 	^ false.! !
 
+!MetaVariable methodsFor: 'testing' stamp: 'fbs 5/27/2011 11:25'!
+hasVariable
+	^ true.! !
+
 
 
 !MetaVariable methodsFor: 'private' stamp: 'fbs 5/24/2011 07:32'!
@@ -42,12 +46,7 @@ MetaVariable class
 !MetaVariable class methodsFor: 'instance creation' stamp: 'fbs 5/24/2011 07:31'!
 named: aSymbol
 	^ self new name: aSymbol.! !
-intString])
-		reduce: [:acc :each | acc , ' ', each]).
-	aStream nextPut: $).! !
-
-
-!MetaVariable methodsFor: 'testing' stamp: 'fbs 5/24/2011 22:05'!
+able methodsFor: 'testing' stamp: 'fbs 5/24/2011 22:05'!
 hasChildren
 	"Even though unapplied a variable looks like it has a parameter, that's just its name."
 	^ false.! !

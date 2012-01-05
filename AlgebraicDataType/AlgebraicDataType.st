@@ -33,6 +33,11 @@ hasChildren
 	"This covers most bases, but see MetaVariable for an exception."
 	^ self unapply size > 1.! !
 
+!AlgebraicDataType methodsFor: 'testing' stamp: 'fbs 5/27/2011 11:25'!
+hasVariable
+	"Return true if any element in my structure is a MetaVariable."
+	^ self unapply anySatisfy: [:each | each isAlgebraic and: [each hasVariable]].! !
+
 !AlgebraicDataType methodsFor: 'testing' stamp: 'fbs 5/25/2011 22:34'!
 isAlgebraic
 	^ true.! !
@@ -95,15 +100,7 @@ paramAt: anInteger
 	"Return the nth 'parameter' of this 'function'."
 	"Just like a Collection, raise the appropriate exception when no such parameter exists."
 	^ self children at: anInteger.! !
-ind: si) unificationClosureWith: (partition find: ti) in: partition].
-	^ partition.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-AlgebraicDataType class
-	instanceVariableNames: ''!
-
-!AlgebraicDataType class methodsFor: 'instance creation' stamp: 'fbs 7/22/2011 17:31'!
+For: 'instance creation' stamp: 'fbs 7/22/2011 17:31'!
 apply: aCollection
 	"The inverse operation to #unapply: given a tagged collection, create an object."
 	self subclassResponsibility.! !
