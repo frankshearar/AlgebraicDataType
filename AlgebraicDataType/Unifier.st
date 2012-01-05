@@ -13,22 +13,18 @@ sigma holds our unifications in triangular form.
 vars is a Dictionary mapping the representative of each equivalence class to the variables in that class.!
 
 
-!Unifier methodsFor: 'evaluating' stamp: 'fbs 5/25/2011 22:36'!
+!Unifier methodsFor: 'evaluating' stamp: 'fbs 5/26/2011 19:09'!
 unify: s with: t
-	self addDecorations: s.
-	self addDecorations: t.
-	self unifClosure: (decorators at: s) and: (decorators at: t).
-	self findSolution: (decorators at: s).
+	self unifClosure: (self decoratorFor: s) and: (self decoratorFor: t).
+	self findSolution: (self decoratorFor: s).
 	^ Dictionary newFrom: sigma.! !
 
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/26/2011 07:37'!
-addDecorations: s
-	decorators at: s ifAbsentPut: (UnificationDecoration decorate: s).
-	(s isAlgebraic and: [s hasChildren])
-		ifTrue: [s children do: [:each | self addDecorations: each]].! !
+!Unifier methodsFor: 'private' stamp: 'fbs 5/26/2011 19:09'!
+decoratorFor: anObject
+	^ decorators at: anObject ifAbsentPut: [UnificationDecoration decorate: anObject].! !
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/25/2011 22:40'!
+!Unifier methodsFor: 'private' stamp: 'fbs 5/26/2011 19:10'!
 findSolution: aDecorator
 	| s |
 	s := aDecorator findRepresentative schemaTerm.
@@ -39,14 +35,14 @@ findSolution: aDecorator
 	(s node isAlgebraic and: [s node hasChildren]) ifTrue:
 		[s visited: true.
 		s node children do:
-			[:each | self findSolution: (decorators at: each)].
+			[:each | self findSolution: (self decoratorFor: each)].
 		s visited: false].
 	
 	s acyclic: true.
 	s findRepresentative vars do:
 		[:x | (x ~= s node) ifTrue: [sigma addFirst: (x -> s node)]].! !
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/25/2011 23:06'!
+!Unifier methodsFor: 'private' stamp: 'fbs 5/26/2011 19:10'!
 unifClosure: leftDecorator and: rightDecorator
 	| left right s sTerm t tTerm |
 	s := leftDecorator findRepresentative.
@@ -61,7 +57,7 @@ unifClosure: leftDecorator and: rightDecorator
 		ifTrue: [(left type = right type)
 					ifTrue: [sTerm union: tTerm].
 				left children with: right children do:
-					[:si :ti | self unifClosure: (decorators at: si) and: (decorators at: ti)]]
+					[:si :ti | self unifClosure: (self decoratorFor: si) and: (self decoratorFor: ti)]]
 		 ifFalse: [s union: t].! !
 
 
@@ -77,6 +73,9 @@ Unifier class
 	instanceVariableNames: ''!
 
 !Unifier class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 07:12'!
+unify: left with: right
+	^ self new unify: left with: right.! !
+ce creation' stamp: 'fbs 5/25/2011 07:12'!
 unify: left with: right
 	^ self new unify: left with: right.! !
 ht

@@ -4,6 +4,10 @@ TestCase subclass: #UnificationTest
 	poolDictionaries: ''
 	category: 'AlgebraicDataType-Tests'!
 
+!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 19:08'!
+testConstantsShouldntUnify
+	self should: [(Leaf value: 1) unifyWith: (Leaf value: 2)] raise: UnificationFailure.! !
+
 !UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 07:24'!
 testCyclicStructuresCantUnify
 	| y |
@@ -14,12 +18,12 @@ testCyclicStructuresCantUnify
 testImpossibleUnificationShouldNotUnify
 	self assert: ((Leaf value: 2) unifyWith: (Leaf value: 1)) = Dictionary new.! !
 
-!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 07:42'!
+!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 09:28'!
 testSelfUnificationShouldUnify
 	| matches x |
 	x := MetaVariable named: #x.
 	matches := x unifyWith: x.
-	self assert: matches = (Dictionary newFrom: {x -> x}).! !
+	self assert: matches = Dictionary new. "A tautology"! !
 
 !UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 07:43'!
 testTrivialBidirectionalUnificationShouldUnify
@@ -77,11 +81,7 @@ testVariableUnifyingAgainstTwoVariables
 	z := MetaVariable named: #z.
 	matches := (Node left: x right: x) unifyWith: (Node left: y right: z).
 	self assert: matches = (Dictionary newFrom: {y -> z. x -> z}).! !
- named: #y. MetaVariable named: #z.
-		MetaVariable named: #x. MetaVariable named: #z}).! !
-
-!UnificationTest methodsFor: 'testing' stamp: 'fbs 1/4/2012 21:36'!
-testVariablesInsideCollectionsUnify
+ctionsUnify
 	| matches |
 	matches := {1. 2. #x asVariable. 4} =? #(1 2 3 4).
 	self assert: matches equals: (Dictionary newFromPairs: {#x asVariable. 3.}).
