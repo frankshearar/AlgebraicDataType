@@ -23,11 +23,11 @@ unify: s with: t
 	^ Dictionary newFrom: sigma.! !
 
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 11:23'!
+!Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 11:26'!
 decoratorFor: anObject
 	^ decorators
 		at: anObject
-		ifAbsentPut: [UnificationDecoration decorate: anObject].! !
+		ifAbsentPut: [UnificationEquivalenceClass decorate: anObject].! !
 
 !Unifier methodsFor: 'private' stamp: 'fbs 5/26/2011 19:10'!
 findSolution: aDecorator
@@ -92,7 +92,7 @@ Unifier class
 !Unifier class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 07:12'!
 unify: left with: right
 	^ self new unify: left with: right.! !
-mes: ''!
+'!
 
 !Unifier class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 07:12'!
 unify: left with: right
