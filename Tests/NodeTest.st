@@ -20,17 +20,19 @@ testNodeHasChildren
 	
 	self assert: (Node left: (Leaf value: 1) right: (Leaf value: 2)) children = {Leaf value: 1. Leaf value: 2}.! !
 
-!NodeTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 07:41'!
-testNodeHasTwoParameters
-	self assert: ((Node left: Tree empty) paramAt: 1) = Tree empty.
-	"Sneaky!! Even a short/helper constructor fully instantiates a Node!!"
-	self assert: ((Node left: Tree empty) paramAt: 2) = Tree empty.! !
-
 !NodeTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 22:32'!
 testNodeIsNotVariable
 	self deny: (Node left: Tree empty right: Tree empty) isMetaVariable.! !
 
 !NodeTest methodsFor: 'testing' stamp: 'fbs 5/22/2011 20:59'!
+testUnapplyShouldDestructureLazily
+	| destructure tree |
+	tree := Node left: (Leaf value: 1) right: (Leaf value: 2).
+	destructure := tree unapply.
+	self assert: destructure first = #Node.
+	self assert: destructure second = tree left.
+	self assert: destructure third = tree right.! !
+1 20:59'!
 testUnapplyShouldDestructureLazily
 	| destructure tree |
 	tree := Node left: (Leaf value: 1) right: (Leaf value: 2).

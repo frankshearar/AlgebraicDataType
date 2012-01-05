@@ -21,10 +21,6 @@ testLeafHasChildren
 	
 	self assert: (Leaf value: 1) children = #(1).! !
 
-!LeafTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 07:39'!
-testLeafHasSingleParameter
-	self assert: ((Leaf value: 1) paramAt: 1) = 1.! !
-
 !LeafTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 22:32'!
 testLeafIsNotVariable
 	self deny: (Leaf value: 1) isMetaVariable.! !
@@ -33,6 +29,11 @@ testLeafIsNotVariable
 testUnapplyShouldDestructure
 	| destructure tree |
 	tree := Leaf value: 1.
+	destructure := tree unapply.
+	self assert: destructure first = #Leaf.
+	self assert: destructure second = tree value.! !
+
+ := Leaf value: 1.
 	destructure := tree unapply.
 	self assert: destructure first = #Leaf.
 	self assert: destructure second = tree value.! !

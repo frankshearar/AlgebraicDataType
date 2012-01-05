@@ -14,9 +14,9 @@ testVariableHasNoChildren
 
 	self assert: (MetaVariable named: #foo) children isEmpty.! !
 
-!MetaVariableTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 07:39'!
-testVariableHasNoParameters
-	self should: [Tree empty paramAt: 1] raise: Error.! !
+!MetaVariableTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 22:32'!
+testVariableIsVariable
+	self assert: (MetaVariable named: #foo) isMetaVariable.! !
 
 !MetaVariableTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 22:32'!
 testVariableIsVariable

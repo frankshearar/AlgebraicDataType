@@ -12,10 +12,6 @@ testEmptyTreeHasNoChildren
 	
 	self assert: Tree empty children isEmpty.! !
 
-!EmptyTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 07:38'!
-testEmptyTreeHasNoParameters
-	self should: [Tree empty paramAt: 1] raise: Error.! !
-
 !EmptyTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 22:33'!
 testEmptyTreeIsNotVariable
 	self deny: Empty new isMetaVariable.
@@ -30,6 +26,12 @@ testEqualsTestsStructuralEquality
 	self deny: t1 == t2. "Not the same object."
 	self assert: t1 = t2. "But are equal objects."
 	self assert: t1 = t3. "Equality means structural equality."! !
+
+!EmptyTest methodsFor: 'testing' stamp: 'fbs 5/22/2011 21:27'!
+testUnapplyShouldDestructure
+	self assert: Tree empty unapply = {#Empty}.! !
+
+."! !
 
 !EmptyTest methodsFor: 'testing' stamp: 'fbs 5/22/2011 21:27'!
 testUnapplyShouldDestructure
