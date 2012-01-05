@@ -37,11 +37,6 @@ hasChildren
 	"This covers most bases, but see MetaVariable for an exception."
 	^ self unapply size > 1.! !
 
-!AlgebraicDataType methodsFor: 'testing' stamp: 'fbs 5/27/2011 11:25'!
-hasVariable
-	"Return true if any element in my structure is a MetaVariable."
-	^ self unapply anySatisfy: [:each | each isAlgebraic and: [each hasVariable]].! !
-
 !AlgebraicDataType methodsFor: 'testing' stamp: 'fbs 5/25/2011 22:34'!
 isAlgebraic
 	^ true.! !
@@ -93,6 +88,12 @@ unificationClosureWithAlgebraic: anObject in: termRelation
 	| partition |
 	(self type = anObject type) ifFalse: [UnificationFailure signal. "f ~= g"].
 	(self arity = anObject arity) ifFalse: [UnificationFailure signal. "m ~= n"].
+	partition := termRelation.
+	self children with: anObject children do:
+		[:si :ti | partition := (partition find: si) unificationClosureWith: (partition find: ti) in: partition].
+	^ partition.! !
+
+ficationFailure signal. "m ~= n"].
 	partition := termRelation.
 	self children with: anObject children do:
 		[:si :ti | partition := (partition find: si) unificationClosureWith: (partition find: ti) in: partition].

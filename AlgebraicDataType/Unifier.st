@@ -20,12 +20,16 @@ unify: s with: t
 	^ (termRelation classFor: s) findSolutionWithUnifier: Dictionary new in: termRelation.! !
 
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 19:51'!
-findSolution: anEquivClass withUnifier: aDictionary
-	^ anEquivClass findSolutionWithUnifier: aDictionary in: termRelation.! !
-
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+Unifier class
+	instanceVariableNames: ''!
+
+!Unifier class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 07:12'!
+unify: left with: right
+	^ self new unify: left with: right.! !
+"!
 
 Unifier class
 	instanceVariableNames: ''!
