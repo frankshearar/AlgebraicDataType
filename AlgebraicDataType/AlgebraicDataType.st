@@ -22,20 +22,16 @@ hash
 	"17's a prime."
 	^ self unapply inject: 17 into: [:acc :each | 17 * each hash].! !
 
-!AlgebraicDataType methodsFor: 'comparing' stamp: 'fbs 5/25/2011 07:12'!
-unifyWith: anAlgebraicDataType
-	^ Unifier unify: self with: anAlgebraicDataType.! !
-
 
 !AlgebraicDataType methodsFor: 'testing' stamp: 'fbs 5/27/2011 22:06'!
 arity
 	^ self children size.! !
 
-!AlgebraicDataType methodsFor: 'testing' stamp: 'fbs 5/24/2011 22:04'!
+!AlgebraicDataType methodsFor: 'testing' stamp: 'fbs 5/30/2011 13:28'!
 hasChildren
 	"Return true if self contains substructures/is of the form f(x1, x2, ..., xn)."
 	"This covers most bases, but see MetaVariable for an exception."
-	^ self unapply size > 1.! !
+	^ self children isEmpty not.! !
 
 !AlgebraicDataType methodsFor: 'testing' stamp: 'fbs 5/25/2011 22:34'!
 isAlgebraic
@@ -61,16 +57,6 @@ unapply
 	self subclassResponsibility.! !
 
 
-!AlgebraicDataType methodsFor: '*Unification' stamp: 'fbs 1/4/2012 11:31'!
-findSolutionWithUnifier: anMGU in: solutionFinder
-	| newUnifier |
-	newUnifier := anMGU copy.
-	self children do:
-		[:each | | d |
-		d := solutionFinder findSolution: each using: anMGU.
-		newUnifier addAll: d].
-	^ newUnifier.! !
-
 !AlgebraicDataType methodsFor: '*Unification' stamp: 'fbs 8/9/2011 07:32'!
 or: anObject
 	^ OrUnifier left: self right: anObject! !
@@ -91,6 +77,21 @@ unificationClosureWithAlgebraic: anObject in: termRelation
 	partition := termRelation.
 	self children with: anObject children do:
 		[:si :ti | partition := (partition find: si) unificationClosureWith: (partition find: ti) in: partition].
+	^ partition.! !
+
+
+
+!AlgebraicDataType methodsFor: 'unification' stamp: 'fbs 5/30/2011 20:20'!
+findSolutionWithUnifier: aDictionary in: termRelation
+	| newUnifier |
+	newUnifier := aDictionary copy.
+	self children do:
+		[:each | | d |
+		d := (termRelation classFor: each)
+			findSolutionWithUnifier: newUnifier in: termRelation.
+		newUnifier addAll: d].
+	^ newUnifier.! !
+ := (partition find: si) unificationClosureWith: (partition find: ti) in: partition].
 	^ partition.! !
 
 ficationFailure signal. "m ~= n"].

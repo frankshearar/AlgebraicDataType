@@ -66,7 +66,7 @@ findSolutionWithUnifier: aDictionary in: termRelation
 		ifTrue: [self privFindSolutionWithUnifier: aDictionary in: termRelation]
 		ifFalse: [self findRepresentative schemaTerm findSolutionWithUnifier: aDictionary in: termRelation]! !
 
-!UnificationEquivalenceClass methodsFor: 'unification' stamp: 'fbs 5/29/2011 13:36'!
+!UnificationEquivalenceClass methodsFor: 'unification' stamp: 'fbs 5/30/2011 20:21'!
 privFindSolutionWithUnifier: aDictionary in: termRelation
 	"Assume that we are the schema term for our equivalence class."
 	| newUnifier |
@@ -75,11 +75,10 @@ privFindSolutionWithUnifier: aDictionary in: termRelation
 	visited ifTrue: [UnificationFailure signal. "Cycle detected."].
 
 	newUnifier := aDictionary copy.	
-	(node isAlgebraic and: [node hasChildren]) ifTrue:
-		[visited := true.
-		node children do:
-			[:each | newUnifier addAll: ((termRelation classFor: each) findSolutionWithUnifier: newUnifier in: termRelation)].
-		visited := false].
+	visited := true.
+	(node isAlgebraic) ifTrue:
+		[newUnifier addAll: (node findSolutionWithUnifier: newUnifier in: termRelation)].
+	visited := false.
 	
 	acyclic := true.
 	self findRepresentative vars do:
@@ -87,13 +86,13 @@ privFindSolutionWithUnifier: aDictionary in: termRelation
 	
 	^ newUnifier.! !
 
-!UnificationEquivalenceClass methodsFor: 'unification' stamp: 'fbs 5/29/2011 13:46'!
+!UnificationEquivalenceClass methodsFor: 'unification' stamp: 'fbs 5/30/2011 19:53'!
 unificationClosureWith: rightEquivClass in: termRelation
 	| left right sTerm t tTerm |
 	t := rightEquivClass findRepresentative.
 	self isRepresentative ifFalse: [^ self findRepresentative unificationClosureWith: t in: termRelation].
 
-	(self = t) ifTrue: [^ self."do nothing"].
+	(self = t) ifTrue: [^ self. "Nothing to do"].
 		
 	sTerm := schemaTerm.
 	tTerm := t schemaTerm.
@@ -106,9 +105,9 @@ unificationClosureWith: rightEquivClass in: termRelation
 	"s, t are both terms."
 	(left isAlgebraic and: [right isAlgebraic])
 		ifTrue:
-			["s = f(s1, ..., sn), t = g(t1, ..., tn) where m, n > 0"
+			["s = f(s1, ..., sm), t = g(t1, ..., tn) where m, n > 0"
 			(left type = right type) ifFalse: [UnificationFailure signal. "f ~= g"].
-			(left arity = right arity) ifFalse: [UnificationFailure signal].
+			(left arity = right arity) ifFalse: [UnificationFailure signal. "m ~= n"].
 			sTerm union: tTerm.
 			left children with: right children do:
 				[:si :ti | (termRelation classFor: si) unificationClosureWith: (termRelation classFor: ti) in: termRelation]]
@@ -118,9 +117,9 @@ unificationClosureWith: rightEquivClass in: termRelation
 				ifTrue: [sTerm union: tTerm]
 				ifFalse: ["s ~= t" UnificationFailure signal]].! !
 
-!UnificationEquivalenceClass methodsFor: 'unification' stamp: 'fbs 5/29/2011 13:45'!
+!UnificationEquivalenceClass methodsFor: 'unification' stamp: 'fbs 5/30/2011 09:48'!
 union: anEquivClass
-	"Given myself, a representative, and aDecorator, another representative, merge the two equivalence classes by folding the smaller into the larger."
+	"Given myself, a representative, and anEquivClass, another representative, merge the two equivalence classes by folding the smaller into the larger."
 	(self classSize >= anEquivClass classSize)
 		ifFalse: [^ anEquivClass union: self].
 	
@@ -144,6 +143,9 @@ UnificationEquivalenceClass class
 	instanceVariableNames: ''!
 
 !UnificationEquivalenceClass class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 21:16'!
+decorate: anObject
+	^ self new decorate: anObject.! !
+011 21:16'!
 decorate: anObject
 	^ self new decorate: anObject.! !
 onEquivalenceClass class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 21:16'!
