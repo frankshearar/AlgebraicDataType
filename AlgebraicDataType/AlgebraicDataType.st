@@ -47,10 +47,21 @@ type
 	^ self unapply first.! !
 
 
+!AlgebraicDataType methodsFor: 'printing' stamp: 'fbs 7/23/2011 10:52'!
+printOn: aStream
+	aStream nextPut: $(.
+	aStream nextPutAll: ((self unapply collect: [:token | token printString])
+		reduce: [:acc :each | acc , ' ', each]).
+	aStream nextPut: $).! !
+
 
 !AlgebraicDataType methodsFor: 'destructuring' stamp: 'fbs 5/22/2011 20:29'!
 unapply
 	self subclassResponsibility.! !
+
+!AlgebraicDataType methodsFor: 'destructuring' stamp: 'fbs 7/23/2011 10:55'!
+unapplyFully
+	^ self unapply collect: [:token | token unapplyFully]! !
 
 
 !AlgebraicDataType methodsFor: '*Unification' stamp: 'fbs 8/9/2011 07:32'!
@@ -76,45 +87,33 @@ unificationClosureWithAlgebraic: anObject in: termRelation
 	^ partition.! !
 
 
-[:si :ti | partition := (partition find: si) unificationClosureWith: (partition find: ti) in: partition].
-	^ partition.! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
+AlgebraicDataType class
+	instanceVariableNames: ''!
 
-!AlgebraicDataType methodsFor: 'unification' stamp: 'fbs 5/30/2011 20:20'!
-findSolutionWithUnifier: aDictionary in: termRelation
-	| newUnifier |
-	newUnifier := aDictionary copy.
-	self children do:
-		[:each | | d |
-		d := (termRelation classFor: each)
-			findSolutionWithUnifier: newUnifier in: termRelation.
-		newUnifier addAll: d].
-	^ newUnifier.! !
- := (partition find: si) unificationClosureWith: (partition find: ti) in: partition].
-	^ partition.! !
-
-ficationFailure signal. "m ~= n"].
-	partition := termRelation.
-	self children with: anObject children do:
-		[:si :ti | partition := (partition find: si) unificationClosureWith: (partition find: ti) in: partition].
-	^ partition.! !
-
-
-!AlgebraicDataType methodsFor: 'function API' stamp: 'fbs 5/25/2011 07:32'!
-paramAt: anInteger
-	"Return the nth 'parameter' of this 'function'."
-	"Just like a Collection, raise the appropriate exception when no such parameter exists."
-	^ self children at: anInteger.! !
-apply: given a tagged collection, create an object."
+!AlgebraicDataType class methodsFor: 'instance creation' stamp: 'fbs 7/22/2011 17:31'!
+apply: aCollection
+	"The inverse operation to #unapply: given a tagged collection, create an object."
 	self subclassResponsibility.! !
 
-!AlgebraicDataType class methodsFor: 'instance creation' stamp: 'fbs 7/9/2011 17:20'!
-define: className in: category
-	"Define the root class of an algebraic data type.
-	- Return the new class."
-	^ AlgebraicDataType
-		subclass: className
+!AlgebraicDataType class methodsFor: 'instance creation' stamp: 'fbs 7/22/2011 17:47'!
+assertCorrectSize: aCollection
+	| expected |
+	expected := self new unapply size.
+	(aCollection size = expected)
+		ifFalse: [ApplyError signal: ('Incorrect number of arguments: was {1}, expected {2}' format: {aCollection size. expected})].! !
+
+!AlgebraicDataType class methodsFor: 'instance creation' stamp: 'fbs 7/22/2011 17:46'!
+assertCorrectTag: aCollection
+	| expected |
+	expected := self new unapply first.
+	(aCollection first = expected)
+		ifFalse: [ApplyError signal: ('Unexpected tag: was {1}, expected {2}' format: {aCollection first. expected})].! !
+
+
+subclass: className
 		instanceVariableNames: ''
 		classVariableNames: ''
 		poolDictionaries: ''

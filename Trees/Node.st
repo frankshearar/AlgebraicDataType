@@ -19,7 +19,7 @@ left: aLeftObject right: aRightObject
 	right := aRightObject.! !
 
 
-!Node methodsFor: 'destructuring' stamp: 'fbs 5/22/2011 20:51'!
+!Node methodsFor: 'destructuring' stamp: 'fbs 7/22/2011 18:25'!
 unapply
 	^ {#Node. left. right.}! !
 
@@ -27,6 +27,12 @@ unapply
 
 Node class
 	instanceVariableNames: ''!
+
+!Node class methodsFor: 'instance creation' stamp: 'fbs 7/22/2011 17:56'!
+apply: aCollection
+	self assertCorrectSize: aCollection.
+	self assertCorrectTag: aCollection.
+	^ self left: (Tree apply: aCollection second) right: (Tree apply: aCollection third).! !
 
 !Node class methodsFor: 'instance creation' stamp: 'fbs 5/22/2011 20:21'!
 left: aLeftObject 

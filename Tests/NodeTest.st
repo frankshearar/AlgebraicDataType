@@ -24,15 +24,50 @@ testNodeHasChildren
 testNodeIsNotVariable
 	self deny: (Node left: Tree empty right: Tree empty) isMetaVariable.! !
 
-!NodeTest methodsFor: 'testing' stamp: 'fbs 5/22/2011 20:59'!
-testUnapplyShouldDestructureLazily
+
+!NodeTest methodsFor: 'testing - instance creation' stamp: 'fbs 7/23/2011 10:53'!
+testApplyIsInverseOfUnapply
+	| node |
+	node := Node left: (Leaf value: 1) right: (Leaf value: 2).
+	self assert: node = (Node apply: node unapplyFully).! !
+
+!NodeTest methodsFor: 'testing - instance creation' stamp: 'fbs 7/22/2011 17:50'!
+testEmptyListFailsToApply
+	self should: [Node apply: {}] raise: ApplyError.! !
+
+!NodeTest methodsFor: 'testing - instance creation' stamp: 'fbs 7/23/2011 10:44'!
+testProperListApplies
+	| node |
+	node := Node apply: {#Node. {#Empty}. {#Leaf. 1.}}.
+	self assert: (node isKindOf: Node).
+	self assert: (node left isKindOf: Empty).
+	self assert: node right value = 1.! !
+
+!NodeTest methodsFor: 'testing - instance creation' stamp: 'fbs 7/22/2011 17:55'!
+testTooIncorrectlyTaggedListFailsToApply
+	self should: [Node apply: {#Nod. {#Empty}. {#Empty}}] raise: ApplyError.! !
+
+!NodeTest methodsFor: 'testing - instance creation' stamp: 'fbs 7/22/2011 17:52'!
+testTooLongListFailsToApply
+	self should: [Node apply: {#Tree. {#Empty}. {#Empty}. {#Empty}}] raise: ApplyError.! !
+
+!NodeTest methodsFor: 'testing - instance creation' stamp: 'fbs 7/22/2011 17:52'!
+testTooShortListFailsToApply
+	self should: [Node apply: {#Tree.}] raise: ApplyError.! !
+
+
+!NodeTest methodsFor: 'testing - unapply' stamp: 'fbs 7/23/2011 10:56'!
+testUnapplyFullyShouldDestructureEagerly
 	| destructure tree |
 	tree := Node left: (Leaf value: 1) right: (Leaf value: 2).
-	destructure := tree unapply.
+	destructure := tree unapplyFully.
 	self assert: destructure first = #Node.
-	self assert: destructure second = tree left.
-	self assert: destructure third = tree right.! !
-1 20:59'!
+	self assert: destructure second isCollection.
+	self assert: destructure second first = #Leaf.
+	self assert: destructure third isCollection.
+	self assert: destructure third first = #Leaf.! !
+
+!NodeTest methodsFor: 'testing - unapply' stamp: 'fbs 5/22/2011 20:59'!
 testUnapplyShouldDestructureLazily
 	| destructure tree |
 	tree := Node left: (Leaf value: 1) right: (Leaf value: 2).
