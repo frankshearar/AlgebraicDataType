@@ -16,26 +16,33 @@ name
 	^ name.! !
 
 
-!MetaVariable methodsFor: 'comparing' stamp: 'fbs 1/4/2012 20:33'!
-= anObject
-	^ anObject isMetaVariable and: [name = anObject name]! !
-
-!MetaVariable methodsFor: 'comparing' stamp: 'fbs 1/4/2012 20:34'!
-hash
-	"17's a prime."
-	"Implementation copied from AlgebraicDataType >> #hash."
-	^ self unapply inject: 17 into: [:acc :each | 17 * each hash].! !
-
 
 !MetaVariable methodsFor: 'destructuring' stamp: 'fbs 5/24/2011 07:34'!
 unapply
 	^ {#Variable. name.}! !
 
 
-!MetaVariable methodsFor: 'printing' stamp: 'fbs 1/4/2012 20:17'!
-printOn: aStream
-	aStream nextPut: $(.
-	aStream nextPutAll: ((self unapply collect: [:token | token printString])
+
+!MetaVariable methodsFor: 'testing' stamp: 'fbs 5/24/2011 22:05'!
+hasChildren
+	"Even though unapplied a variable looks like it has a parameter, that's just its name."
+	^ false.! !
+
+
+
+!MetaVariable methodsFor: 'private' stamp: 'fbs 5/24/2011 07:32'!
+name: aSymbol
+	name := aSymbol.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+MetaVariable class
+	instanceVariableNames: ''!
+
+!MetaVariable class methodsFor: 'instance creation' stamp: 'fbs 5/24/2011 07:31'!
+named: aSymbol
+	^ self new name: aSymbol.! !
+intString])
 		reduce: [:acc :each | acc , ' ', each]).
 	aStream nextPut: $).! !
 

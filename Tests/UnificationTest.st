@@ -4,70 +4,80 @@ TestCase subclass: #UnificationTest
 	poolDictionaries: ''
 	category: 'AlgebraicDataType-Tests'!
 
-!UnificationTest methodsFor: 'testing' stamp: 'fbs 1/4/2012 22:16'!
+!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 07:24'!
 testCyclicStructuresCantUnify
 	| y |
 	y := MetaVariable named: #y.
-	self should: [y unifyWith: {y}] raise: UnificationFailure.! !
+	self should: [y unifyWith: (Node left: y right: (Leaf value: y))] raise: UnificationFailure.! !
 
 !UnificationTest methodsFor: 'testing' stamp: 'fbs 5/24/2011 07:25'!
 testImpossibleUnificationShouldNotUnify
 	self assert: ((Leaf value: 2) unifyWith: (Leaf value: 1)) = Dictionary new.! !
 
-!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 23:00'!
+!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 07:42'!
 testSelfUnificationShouldUnify
-	| matches |
-	matches := (MetaVariable named: #x) unifyWith: (MetaVariable named: #x).
-	self assert: matches = (Dictionary newFromPairs: {MetaVariable named: #x. MetaVariable named: #x}).! !
+	| matches x |
+	x := MetaVariable named: #x.
+	matches := x unifyWith: x.
+	self assert: matches = (Dictionary newFrom: {x -> x}).! !
 
-!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 23:00'!
+!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 07:43'!
 testTrivialBidirectionalUnificationShouldUnify
-	| matches |
-	matches := (MetaVariable named: #x) unifyWith: (MetaVariable named: #y).
-	self assert: matches = (Dictionary newFromPairs: {MetaVariable named: #x. MetaVariable named: #y}).! !
+	| matches x y |
+	x := MetaVariable named: #x.
+	y := MetaVariable named: #y.
+	matches := x unifyWith: y.
+	self assert: matches = (Dictionary newFrom: {x -> y}).! !
 
-!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 22:57'!
+!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 07:44'!
 testTrivialUnificationsShouldUnify
-	| matches |
+	| matches x |
 	matches := (MetaVariable named: #leaf) unifyWith: (Leaf value: 1).
 	self assert: matches = (Dictionary newFromPairs: {MetaVariable named: #leaf. Leaf value: 1}).
 	
-	matches := (MetaVariable named: #x) unifyWith: 2.
-	self assert: matches = (Dictionary newFromPairs: {MetaVariable named: #x. 2}).! !
+	x := MetaVariable named: #x.
+	matches := x unifyWith: 2.
+	self assert: matches = (Dictionary newFrom: {x -> 2}).! !
 
-!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 23:30'!
+!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 07:50'!
 testTwoVariableBidirectionalUnificationShouldUnifyBoth
-	| matches |
-	matches := (Node left: (MetaVariable named: #left) right: (Leaf value: 2))
-		unifyWith: (Node left: (Leaf value: 1) right: (MetaVariable named: #right)).
-	self assert: matches = (Dictionary newFromPairs: {
-		MetaVariable named: #left. Leaf value: 1.
-		MetaVariable named: #right. Leaf value: 2}).! !
+	| matches left right |
+	left := MetaVariable named: #left.
+	right := MetaVariable named: #right.
+	matches := (Node left: left right: (Leaf value: 2))
+		unifyWith: (Node left: (Leaf value: 1) right: right).
+	self assert: matches = (Dictionary newFrom: {
+		left -> (Leaf value: 1).
+		right -> (Leaf value: 2)}).! !
 
-!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 23:30'!
+!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 07:51'!
 testTwoVariableUnificationShouldUnifyBoth
-	| matches |
-	matches := (Node left: (MetaVariable named: #left) right: (MetaVariable named: #right))
+	| matches left right |
+	left := MetaVariable named: #left.
+	right := MetaVariable named: #right.
+	matches := (Node left: left right: right)
 		unifyWith: (Node left: (Leaf value: 1) right: (Leaf value: 2)).
-	self assert: matches = (Dictionary newFromPairs: {
-		MetaVariable named: #left. Leaf value: 1.
-		MetaVariable named: #right. Leaf value: 2}).! !
+	self assert: matches = (Dictionary newFrom: {
+		left -> (Leaf value: 1).
+		right -> (Leaf value: 2)}).! !
 
-!UnificationTest methodsFor: 'testing' stamp: 'fbs 1/5/2012 09:27'!
+!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 07:52'!
 testUnificationWorksOnDeepStructures
 	| matches x y |
 	x := MetaVariable named: #x.
 	y := MetaVariable named: #y.
-	matches := { {{x}} } unifyWith: {y}.
-	self assert: matches = (Dictionary newFrom: { y -> {{x}} }).! !
+	matches := (Node left: (Node left: (Node left: x))) unifyWith: (Node left: y).
+	self assert: matches = (Dictionary newFrom: {y -> (Node left: (Node left: x))}).! !
 
-!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/25/2011 23:38'!
+!UnificationTest methodsFor: 'testing' stamp: 'fbs 5/26/2011 08:24'!
 testVariableUnifyingAgainstTwoVariables
-	| matches |
-	matches := (Node left: (MetaVariable named: #x) right: (MetaVariable named: #x))
-		unifyWith: (Node left: (MetaVariable named: #y) right: (MetaVariable named: #z)).
-	self assert: matches = (Dictionary newFromPairs: {
-		MetaVariable named: #y. MetaVariable named: #z.
+	| matches x y z |
+	x := MetaVariable named: #x.
+	y := MetaVariable named: #y.
+	z := MetaVariable named: #z.
+	matches := (Node left: x right: x) unifyWith: (Node left: y right: z).
+	self assert: matches = (Dictionary newFrom: {y -> z. x -> z}).! !
+ named: #y. MetaVariable named: #z.
 		MetaVariable named: #x. MetaVariable named: #z}).! !
 
 !UnificationTest methodsFor: 'testing' stamp: 'fbs 1/4/2012 21:36'!

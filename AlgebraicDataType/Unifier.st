@@ -22,14 +22,13 @@ unify: s with: t
 	^ Dictionary newFrom: sigma.! !
 
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/25/2011 23:03'!
+!Unifier methodsFor: 'private' stamp: 'fbs 5/26/2011 07:37'!
 addDecorations: s
 	decorators at: s ifAbsentPut: (UnificationDecoration decorate: s).
-	((s isKindOf: AlgebraicDataType) and: [s hasChildren])
+	(s isAlgebraic and: [s hasChildren])
 		ifTrue: [s children do: [:each | self addDecorations: each]].! !
 
-
-!Unifier methodsFor: 'as yet unclassified' stamp: 'fbs 5/25/2011 22:40'!
+!Unifier methodsFor: 'private' stamp: 'fbs 5/25/2011 22:40'!
 findSolution: aDecorator
 	| s |
 	s := aDecorator findRepresentative schemaTerm.
@@ -47,7 +46,7 @@ findSolution: aDecorator
 	s findRepresentative vars do:
 		[:x | (x ~= s node) ifTrue: [sigma addFirst: (x -> s node)]].! !
 
-!Unifier methodsFor: 'as yet unclassified' stamp: 'fbs 5/25/2011 23:06'!
+!Unifier methodsFor: 'private' stamp: 'fbs 5/25/2011 23:06'!
 unifClosure: leftDecorator and: rightDecorator
 	| left right s sTerm t tTerm |
 	s := leftDecorator findRepresentative.
@@ -79,4 +78,6 @@ Unifier class
 
 !Unifier class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 07:12'!
 unify: left with: right
+	^ self new unify: left with: right.! !
+ht
 	^ self new unify: left with: right.! !
