@@ -27,6 +27,10 @@ unifyWith: anAlgebraicDataType
 	^ Unifier unify: self with: anAlgebraicDataType.! !
 
 
+!AlgebraicDataType methodsFor: 'testing' stamp: 'fbs 5/27/2011 22:06'!
+arity
+	^ self children size.! !
+
 !AlgebraicDataType methodsFor: 'testing' stamp: 'fbs 5/24/2011 22:04'!
 hasChildren
 	"Return true if self contains substructures/is of the form f(x1, x2, ..., xn)."
@@ -100,9 +104,7 @@ paramAt: anInteger
 	"Return the nth 'parameter' of this 'function'."
 	"Just like a Collection, raise the appropriate exception when no such parameter exists."
 	^ self children at: anInteger.! !
-For: 'instance creation' stamp: 'fbs 7/22/2011 17:31'!
-apply: aCollection
-	"The inverse operation to #unapply: given a tagged collection, create an object."
+apply: given a tagged collection, create an object."
 	self subclassResponsibility.! !
 
 !AlgebraicDataType class methodsFor: 'instance creation' stamp: 'fbs 7/9/2011 17:20'!

@@ -23,7 +23,7 @@ unify: s with: t
 	^ Dictionary newFrom: sigma.! !
 
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/27/2011 11:27'!
+!Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 11:23'!
 decoratorFor: anObject
 	^ decorators
 		at: anObject
@@ -47,7 +47,7 @@ findSolution: aDecorator
 	s findRepresentative vars do:
 		[:x | (x ~= s node) ifTrue: [sigma addFirst: (x -> s node)]].! !
 
-!Unifier methodsFor: 'private' stamp: 'fbs 5/27/2011 20:24'!
+!Unifier methodsFor: 'private' stamp: 'fbs 5/28/2011 11:21'!
 unifClosure: leftDecorator and: rightDecorator
 	| left right s sTerm t tTerm |
 	s := leftDecorator findRepresentative.
@@ -59,26 +59,23 @@ unifClosure: leftDecorator and: rightDecorator
 	left := sTerm node.
 	right := tTerm node.
 	
-"	if s([s]) = f(...) and s([t]) = f(...)"
-	(left isMetaVariable not and: [right isMetaVariable not])
-		ifTrue: ["s, t are both terms."
-			(left isAlgebraic and: [right isAlgebraic])
-				ifTrue:
-					["s = f(s1, ..., sn), t = g(t1, ..., tn) where m, n > 0"
-					(left type = right type)
-						ifTrue:
-							[sTerm union: tTerm.
-							"Arity fail."
-							(left children size = right children size) ifFalse: [UnificationFailure signal].
-							left children with: right children do:
-								[:si :ti | self unifClosure: (self decoratorFor: si) and: (self decoratorFor: ti)]]
-						ifFalse: [UnificationFailure signal. "f ~= g"]]
-				ifFalse:
-					["At least one of s, t are not AlgebraicDataTypes, but some other kind of value."
-					(left = right)
-						ifTrue: [sTerm union: tTerm]
-						ifFalse: ["s ~= t" UnificationFailure signal]]]
-		ifFalse: [s union: t].! !
+	(left isMetaVariable or: [right isMetaVariable])
+		ifTrue: [^ s union: t].
+
+	"s, t are both terms."
+	(left isAlgebraic and: [right isAlgebraic])
+		ifTrue:
+			["s = f(s1, ..., sn), t = g(t1, ..., tn) where m, n > 0"
+			(left type = right type) ifFalse: [UnificationFailure signal. "f ~= g"].
+			sTerm union: tTerm.
+			(left arity = right arity) ifFalse: [UnificationFailure signal].
+			left children with: right children do:
+				[:si :ti | self unifClosure: (self decoratorFor: si) and: (self decoratorFor: ti)]]
+		ifFalse:
+			["At least one of s, t are not AlgebraicDataTypes, but some other kind of value."
+			(left = right)
+				ifTrue: [sTerm union: tTerm]
+				ifFalse: ["s ~= t" UnificationFailure signal]].! !
 
 
 !Unifier methodsFor: 'initialize-release' stamp: 'fbs 5/25/2011 21:15'!
@@ -91,6 +88,11 @@ initialize
 
 Unifier class
 	instanceVariableNames: ''!
+
+!Unifier class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 07:12'!
+unify: left with: right
+	^ self new unify: left with: right.! !
+mes: ''!
 
 !Unifier class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 07:12'!
 unify: left with: right
