@@ -48,12 +48,11 @@ testEqualsTestsStructuralEquality
 testUnapplyShouldDestructure
 	self assert: Tree empty unapply = {#Empty}.! !
 
-ans structural equality."! !
 
-!EmptyTest methodsFor: 'testing' stamp: 'fbs 5/22/2011 21:27'!
-testUnapplyShouldDestructure
-	self assert: Tree empty unapply = {#Empty}.! !
+!EmptyTest methodsFor: 'testing - accessing' stamp: 'fbs 9/12/2011 15:36'!
+testHeightOfAnEmptyTreeIsZero
+	self assert: 0 equals: Tree empty height.! !
 
-For: 'testing - accessing' stamp: 'fbs 9/12/2011 15:41'!
+!EmptyTest methodsFor: 'testing - accessing' stamp: 'fbs 9/12/2011 15:41'!
 testSizeOfAnEmptyTreeIsZero
 	self assert: 0 equals: Tree empty size.! !

@@ -4,6 +4,14 @@ Tree subclass: #Leaf
 	poolDictionaries: ''
 	category: 'AlgebraicDataType-Trees'!
 
+!Leaf methodsFor: 'accessing' stamp: 'fbs 9/12/2011 08:17'!
+height
+	^ 1.! !
+
+!Leaf methodsFor: 'accessing' stamp: 'fbs 9/12/2011 08:16'!
+size
+	^ 1.! !
+
 !Leaf methodsFor: 'accessing' stamp: 'fbs 5/22/2011 20:20'!
 value
 	^ value.! !
@@ -28,11 +36,6 @@ apply: aCollection
 	self assertCorrectSize: aCollection.
 	self assertCorrectTag: aCollection.
 	^ self value: aCollection second.! !
-
-!Leaf class methodsFor: 'instance creation' stamp: 'fbs 5/22/2011 20:19'!
-value: anObject
-	^ self new value: anObject.! !
-alue: aCollection second.! !
 
 !Leaf class methodsFor: 'instance creation' stamp: 'fbs 5/22/2011 20:19'!
 value: anObject

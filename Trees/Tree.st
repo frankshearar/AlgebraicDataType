@@ -4,6 +4,14 @@ AlgebraicDataType subclass: #Tree
 	poolDictionaries: ''
 	category: 'AlgebraicDataType-Trees'!
 
+!Tree methodsFor: 'accessing' stamp: 'fbs 9/12/2011 08:17'!
+height
+	^ self subclassResponsibility.! !
+
+!Tree methodsFor: 'accessing' stamp: 'fbs 9/12/2011 08:16'!
+size
+	self subclassResponsibility.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 Tree class
@@ -22,17 +30,6 @@ apply: aCollection
 
 
 !Tree class methodsFor: 'accessing' stamp: 'fbs 5/22/2011 20:27'!
-empty
-	^ EmptyTree.! !
-
-
-!Tree class methodsFor: 'class initialization' stamp: 'fbs 5/22/2011 20:28'!
-initialize
-	EmptyTree := Empty new.! !
-
-
-Tree initialize!
-'accessing' stamp: 'fbs 5/22/2011 20:27'!
 empty
 	^ EmptyTree.! !
 

@@ -55,12 +55,10 @@ testUnapplyShouldDestructure
 	self assert: destructure first = #Leaf.
 	self assert: destructure second = tree value.! !
 
-value: 1.
-	destructure := tree unapply.
-	self assert: destructure first = #Leaf.
-	self assert: destructure second = tree value.! !
 
-value: 1) height.! !
+!LeafTest methodsFor: 'testing - accessing' stamp: 'fbs 9/12/2011 15:36'!
+testHeightOfaLeafNodeIsOne
+	self assert: 1 equals: (Leaf value: 1) height.! !
 
 !LeafTest methodsFor: 'testing - accessing' stamp: 'fbs 9/12/2011 15:41'!
 testSizeOfaLeafNodeIsOne

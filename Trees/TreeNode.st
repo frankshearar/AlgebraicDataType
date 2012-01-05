@@ -4,6 +4,10 @@ AlgebraicDataType subclass: #TreeNode
 	poolDictionaries: ''
 	category: 'AlgebraicDataType-Trees'!
 
+!TreeNode methodsFor: 'accessing' stamp: 'fbs 9/12/2011 15:39'!
+height
+	^ (left height max: right height) + 1.! !
+
 !TreeNode methodsFor: 'accessing' stamp: 'fbs 5/22/2011 20:22'!
 left
 	^ left.! !
@@ -11,6 +15,10 @@ left
 !TreeNode methodsFor: 'accessing' stamp: 'fbs 5/22/2011 20:22'!
 right
 	^ right.! !
+
+!TreeNode methodsFor: 'accessing' stamp: 'fbs 9/12/2011 21:17'!
+size
+	^ left size + right size + 1.! !
 
 
 !TreeNode methodsFor: 'private' stamp: 'fbs 5/22/2011 20:22'!
@@ -40,12 +48,6 @@ left: aLeftObject
 
 !TreeNode class methodsFor: 'instance creation' stamp: 'fbs 5/22/2011 20:21'!
 left: aLeftObject right: aRightObject
-	^ self new left: aLeftObject right: aRightObject.! !
-
-!TreeNode class methodsFor: 'instance creation' stamp: 'fbs 5/22/2011 20:21'!
-right: aRightObject
-	^ self left: Tree empty right: aRightObject.! !
-ht: aRightObject
 	^ self new left: aLeftObject right: aRightObject.! !
 
 !TreeNode class methodsFor: 'instance creation' stamp: 'fbs 5/22/2011 20:21'!

@@ -71,15 +71,11 @@ testUnapplyShouldDestructureLazily
 	self assert: destructure first = #TreeNode.
 	self assert: destructure second = tree left.
 	self assert: destructure third = tree right.! !
-ructure := tree unapply.
-	self assert: destructure first = #TreeNode.
-	self assert: destructure second = tree left.
-	self assert: destructure third = tree right.! !
-fbs 8/3/2011 07:49'!
-testUnapplyShouldDestructureLazily
-	| destructure tree |
-	tree := TreeNode left: (Leaf value: 1) right: (Leaf value: 2).
-	destructure := tree unapply.
-	self assert: destructure first = #TreeNode.
-	self assert: destructure second = tree left.
-	self assert: destructure third = tree right.! !
+
+
+!TreeNodeTest methodsFor: 'testing - accessing' stamp: 'fbs 9/12/2011 15:41'!
+testHeightOfaTreeIsOneMoreThanMaxHeightOfItsChildren
+	self assert: 2 equals: (TreeNode left: (Leaf value: 1)) height.
+	self assert: 2 equals: (TreeNode right: (Leaf value: 1)) height.
+	self assert: 3 equals: (TreeNode left: (Leaf value: 1) right: (TreeNode left: (Leaf value: 2))) height.
+	self assert: 3 equals: (TreeNode left: (TreeNode left: (Leaf value: 2)) right: (Leaf value: 1)) height.! !
