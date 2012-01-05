@@ -31,10 +31,6 @@ node: anObject
 schemaTerm
 	^ schemaTerm.! !
 
-!UnificationEquivalenceClass methodsFor: 'accessing' stamp: 'fbs 5/28/2011 15:47'!
-schemaTerm: anEquivClass
-	schemaTerm := anEquivClass.! !
-
 !UnificationEquivalenceClass methodsFor: 'accessing' stamp: 'fbs 5/25/2011 19:47'!
 vars
 	^ vars! !
@@ -148,5 +144,8 @@ UnificationEquivalenceClass class
 	instanceVariableNames: ''!
 
 !UnificationEquivalenceClass class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 21:16'!
+decorate: anObject
+	^ self new decorate: anObject.! !
+onEquivalenceClass class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 21:16'!
 decorate: anObject
 	^ self new decorate: anObject.! !
