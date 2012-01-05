@@ -3,14 +3,10 @@ Object subclass: #Unifier
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'AlgebraicDataType'!
-!Unifier commentStamp: 'fbs 5/25/2011 17:36' prior: 0!
+!Unifier commentStamp: 'fbs 5/29/2011 21:53' prior: 0!
 I attempt to unify two structures, that is, find mappings between the MetaVariables (if any) within the two structures such that the structures represent the same structure.
 
-I return a Dictionary containing the most general unifier.
-
-classes holds the equivalence classes we build up as part of our term relation. It's a Dictionary mapping nodes to parent nodes.
-sigma holds our unifications in triangular form.
-vars is a Dictionary mapping the representative of each equivalence class to the variables in that class.!
+I return a Dictionary containing the most general unifier.!
 
 
 !Unifier methodsFor: 'evaluating' stamp: 'fbs 5/28/2011 19:53'!
@@ -18,6 +14,18 @@ unify: s with: t
 	termRelation := TermRelation new.
 	(termRelation classFor: s) unificationClosureWith: (termRelation classFor: t) in: termRelation.
 	^ (termRelation classFor: s) findSolutionWithUnifier: Dictionary new in: termRelation.! !
+
+
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+Unifier class
+	instanceVariableNames: ''!
+
+!Unifier class methodsFor: 'instance creation' stamp: 'fbs 5/25/2011 07:12'!
+unify: left with: right
+	^ self new unify: left with: right.! !
+r: Dictionary new in: termRelation.! !
 
 
 
