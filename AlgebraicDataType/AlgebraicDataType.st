@@ -37,10 +37,6 @@ hasChildren
 isAlgebraic
 	^ true.! !
 
-!AlgebraicDataType methodsFor: 'testing' stamp: 'fbs 5/25/2011 22:31'!
-isMetaVariable
-	^ self unapply first = #Variable.! !
-
 
 !AlgebraicDataType methodsFor: 'accessing' stamp: 'fbs 5/24/2011 22:06'!
 children
@@ -77,6 +73,10 @@ unificationClosureWithAlgebraic: anObject in: termRelation
 	partition := termRelation.
 	self children with: anObject children do:
 		[:si :ti | partition := (partition find: si) unificationClosureWith: (partition find: ti) in: partition].
+	^ partition.! !
+
+
+[:si :ti | partition := (partition find: si) unificationClosureWith: (partition find: ti) in: partition].
 	^ partition.! !
 
 
