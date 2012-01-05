@@ -9,14 +9,14 @@ AlgebraicDataType subclass: #Tree
 Tree class
 	instanceVariableNames: 'EmptyTree'!
 
-!Tree class methodsFor: 'instance creation' stamp: 'fbs 7/22/2011 18:00'!
+!Tree class methodsFor: 'instance creation' stamp: 'fbs 8/3/2011 07:49'!
 apply: aCollection
 	| knownTags tag |
 	aCollection isEmpty ifTrue: [ApplyError signal: 'Cannot apply the empty list'].
 	tag := aCollection first.
 	tag = #Empty ifTrue: [^ Empty apply: aCollection].
 	tag = #Leaf ifTrue: [^ Leaf apply: aCollection].
-	tag = #Node ifTrue: [^ Node apply: aCollection].
+	tag = #TreeNode ifTrue: [^ TreeNode apply: aCollection].
 	knownTags := 'Empty, Leaf, Node'.
 	ApplyError signal: ('Unknown tag {1}, expected one of {2}' format: {tag. knownTags}). ! !
 
@@ -32,7 +32,7 @@ initialize
 
 
 Tree initialize!
-dsFor: 'accessing' stamp: 'fbs 5/22/2011 20:27'!
+'accessing' stamp: 'fbs 5/22/2011 20:27'!
 empty
 	^ EmptyTree.! !
 
