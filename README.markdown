@@ -16,4 +16,4 @@ An AlgebraicDataType in this library is an object that can decompose itself into
     created := TreeNode left: (Leaf value: 1) right: (Leaf value: 2).
     applied = created.
 
-Note that the above also demonstrates AlgebraicDataType subclasses use structural equality (although of course referential equalit - identity - is still available through #==).
+Note that the above also demonstrates AlgebraicDataType subclasses use structural equality (although of course referential equalit - identity - is still available through `#==`).
